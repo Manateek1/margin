@@ -650,10 +650,13 @@ function App() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="privacy-card">
-            <span className="privacy-icon"><ShieldCheck size={16} aria-hidden="true" /></span>
-            <div><strong>Your plan stays here</strong><span>Saved on this device</span></div>
-          </div>
+          <button type="button" className={`privacy-card${vaultStatus === 'unlocked' ? ' privacy-card--locked' : ''}`} onClick={() => goToPage('security')} disabled={vaultBusy}>
+            <span className="privacy-icon">{vaultStatus === 'unlocked' ? <LockKeyhole size={16} aria-hidden="true" /> : <ShieldCheck size={16} aria-hidden="true" />}</span>
+            {vaultStatus === 'unlocked'
+              ? <span className="privacy-copy"><strong>Password lock on</strong><span>Encrypted on this device</span></span>
+              : <span className="privacy-copy"><strong>Add a password</strong><span>Lock your plan on this device</span></span>}
+            <ChevronRight size={15} className="privacy-arrow" aria-hidden="true" />
+          </button>
           <button type="button" className="reset-link" onClick={resetDemo} disabled={vaultBusy}>
             <RotateCcw size={14} aria-hidden="true" /> Reset example plan
           </button>
@@ -943,7 +946,7 @@ function App() {
             </div>
           )}
 
-          <footer className="page-footer"><span>Margin</span><span className="footer-divider" /><span>More clarity for the home you share.</span><span className="footer-spacer" /><span><LockKeyhole size={13} /> Your plan stays on this device.</span></footer>
+          <footer className="page-footer"><span>Margin</span><span className="footer-divider" /><span>More clarity for the home you share.</span></footer>
         </div>
       </main>
 

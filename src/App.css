@@ -47,11 +47,16 @@
 .nav-ai-dot, .ai-live-label > span { width: 7px; height: 7px; border-radius: 50%; background: #1a9a72; box-shadow: 0 0 0 3px rgba(26, 154, 114, .1); }
 .nav-ai-dot { margin-left: auto; }
 .sidebar-bottom { display: grid; gap: 17px; margin-top: auto; }
-.privacy-card { display: flex; align-items: flex-start; gap: 10px; padding: 13px 11px; border: 1px solid #dfe9e4; border-radius: 12px; background: rgba(255, 255, 255, .58); }
-.privacy-icon { display: grid; place-items: center; flex: 0 0 27px; height: 27px; border-radius: 8px; color: var(--teal); background: #e5f3ed; }
-.privacy-card strong, .privacy-card span { display: block; }
+.privacy-card { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 11px; border: 1px solid #dfe9e4; border-radius: 12px; color: inherit; font: inherit; text-align: left; background: rgba(255, 255, 255, .58); cursor: pointer; transition: border-color .15s ease, background .15s ease; }
+.privacy-card:hover:not(:disabled) { border-color: #c9dccf; background: #fff; }
+.privacy-card:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.privacy-card:disabled { cursor: default; opacity: .7; }
+.privacy-icon { display: grid; place-items: center; flex: 0 0 30px; height: 30px; border-radius: 9px; color: var(--teal); background: #e5f3ed; }
+.privacy-copy { flex: 1; min-width: 0; }
+.privacy-card strong, .privacy-copy > span { display: block; }
 .privacy-card strong { color: #31413c; font-size: 10px; font-weight: 650; }
-.privacy-card div > span { margin-top: 4px; color: #87938f; font-size: 9px; line-height: 1.4; }
+.privacy-copy > span { margin-top: 3px; color: #87938f; font-size: 9px; line-height: 1.4; }
+.privacy-arrow { flex: 0 0 auto; color: #a7b3ad; }
 .reset-link { display: inline-flex; align-items: center; justify-self: start; gap: 8px; padding: 0 10px; border: 0; color: #74817d; background: transparent; font: 500 11px Inter, sans-serif; cursor: pointer; }
 .reset-link:hover { color: var(--coral); }
 .sidebar-version { padding: 0 10px; color: #a0aaa6; font-size: 8px; font-weight: 700; letter-spacing: .1em; }
@@ -410,9 +415,6 @@
 .page-footer { display: flex; align-items: center; gap: 8px; margin-top: 25px; padding-top: 13px; border-top: 1px solid #e7ece9; color: #9aa5a0; font-size: 8px; }
 .page-footer > span:first-child { color: #5e7169; font-weight: 700; }
 .footer-divider { width: 3px; height: 3px; border-radius: 50%; background: #bdc7c2; }
-.footer-spacer { flex: 1; }
-.page-footer > span:last-child { display: inline-flex; align-items: center; gap: 4px; }
-.page-footer > span:last-child svg { color: #6da98f; }
 .toast { position: fixed; right: 25px; bottom: 22px; z-index: 20; display: flex; align-items: center; gap: 8px; max-width: min(520px, calc(100vw - 32px)); padding: 11px 13px; border: 1px solid #dce8e2; border-radius: 10px; color: #42564d; background: white; box-shadow: 0 10px 30px rgba(18, 45, 35, .13); font-size: 10px; animation: rise-in .18s ease both; }
 .toast > svg { flex: 0 0 auto; color: #2b9a74; }
 .toast > span { line-height: 1.4; }
@@ -537,7 +539,6 @@
   .coach-output-card blockquote { margin-top: 18px; font-size: 15px; }
   .generated-by { align-items: flex-start; flex-direction: column; }
   .page-footer { flex-wrap: wrap; gap: 5px; margin-top: 19px; font-size: 7px; }
-  .page-footer > span:last-child { width: 100%; margin-top: 5px; }
   .toast { right: 10px; bottom: 80px; left: 10px; max-width: none; }
   .mobile-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 15; display: grid; grid-template-columns: repeat(5, 1fr); min-height: 61px; padding: 5px 5px calc(5px + env(safe-area-inset-bottom)); border-top: 1px solid #e4ebe7; background: rgba(255, 255, 255, .95); box-shadow: 0 -5px 20px rgba(39, 63, 53, .07); backdrop-filter: blur(15px); }
   .mobile-nav-item { display: grid; place-items: center; align-content: center; gap: 3px; padding: 4px 0; border: 0; border-radius: 8px; color: #87938e; background: transparent; font: 550 7px Inter, sans-serif; cursor: pointer; }
@@ -571,7 +572,7 @@
 .nav-item--active svg { color: #345d29; }
 .privacy-card { background: #fff; border-color: #e4ebe0; border-radius: 16px; }
 .privacy-card strong, .reset-link { font-size: 12px; }
-.privacy-card div > span { color: #627061; font-size: 11px; }
+.privacy-copy > span { color: #627061; font-size: 11px; }
 .sidebar-version { color: #788777; font-size: 9px; }
 .topbar { min-height: 66px; border-color: #eff2ee; background: rgba(255,255,255,.94); }
 .breadcrumb { color: #687468; font-size: 12px; }
