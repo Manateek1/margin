@@ -653,8 +653,8 @@ function App() {
           <button type="button" className={`privacy-card${vaultStatus === 'unlocked' ? ' privacy-card--locked' : ''}`} onClick={() => goToPage('security')} disabled={vaultBusy}>
             <span className="privacy-icon">{vaultStatus === 'unlocked' ? <LockKeyhole size={16} aria-hidden="true" /> : <ShieldCheck size={16} aria-hidden="true" />}</span>
             {vaultStatus === 'unlocked'
-              ? <span className="privacy-copy"><strong>Password lock on</strong><span>Encrypted on this device</span></span>
-              : <span className="privacy-copy"><strong>Add a password</strong><span>Lock your plan on this device</span></span>}
+              ? <span className="privacy-copy"><strong>Password lock on</strong><span>Plan is encrypted</span></span>
+              : <span className="privacy-copy"><strong>Add a password</strong><span>Lock this plan</span></span>}
             <ChevronRight size={15} className="privacy-arrow" aria-hidden="true" />
           </button>
           <button type="button" className="reset-link" onClick={resetDemo} disabled={vaultBusy}>
