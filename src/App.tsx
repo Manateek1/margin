@@ -761,9 +761,6 @@ function App() {
             <strong>{NAV_ITEMS.find((item) => item.id === page)?.label}</strong>
           </div>
           <div className="topbar-actions">
-            <button type="button" className="topbar-landing-btn" onClick={() => { setShowLanding(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
-              Landing page
-            </button>
             <button type="button" className="icon-button top-copy" aria-label="Copy plan summary" title="Copy plan summary" onClick={copySummary}>
               <Copy size={16} aria-hidden="true" />
             </button>

@@ -801,21 +801,6 @@
   color: #2f4d24;
   text-decoration: underline;
 }
-.topbar-landing-btn {
-  height: 36px;
-  padding: 0 14px;
-  border: 1px solid #d9e4d3;
-  border-radius: 999px;
-  background: #f6faf3;
-  color: #294122;
-  font: 600 12px Inter, sans-serif;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-.topbar-landing-btn:hover {
-  background: #ebf3e5;
-  border-color: #c2d6b8;
-}
 
 /* =========================================================
    LANDING PAGE (Inspired by ProFinance Editorial Layout)
