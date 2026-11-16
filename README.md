@@ -1,5 +1,7 @@
 # Margin
 
+**Live App:** [https://getmargin.pages.dev](https://getmargin.pages.dev)
+
 Margin is a roommate planning app. It supports up to 12 roommates with customizable illustrated avatars, recurring costs, month-specific paid status, and equal or available-income splits. Users can preview one-time costs or credits, export the plan to CSV, and draft a conversation opener with Cloudflare Workers AI.
 
 ## Privacy and cost
