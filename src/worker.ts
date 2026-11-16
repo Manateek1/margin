@@ -1,4 +1,10 @@
 import type { CoachGoal, Tone } from './lib/finance'
+import {
+  interpretDocumentLocally,
+  sanitizeInterpretationPayload,
+  scrubSensitivePdfText,
+  type InterpretMode,
+} from './lib/pdfInterpreter'
 
 interface AIService {
   run(
@@ -36,6 +42,7 @@ const WINDOW_MS = 10 * 60 * 1000
 const MAX_REQUESTS_PER_WINDOW = 20
 const MAX_TRACKED_CLIENTS = 2048
 const MAX_BODY_BYTES = 512
+const MAX_INTERPRET_BYTES = 8192
 
 function jsonResponse(body: Record<string, unknown>, status = 200): Response {
   return Response.json(body, {
@@ -91,7 +98,7 @@ function allowRequest(request: Request): boolean {
   return true
 }
 
-async function readLimitedBody(request: Request): Promise<string | null> {
+async function readLimitedBody(request: Request, maxBytes = MAX_BODY_BYTES): Promise<string | null> {
   if (!request.body) return ''
   const reader = request.body.getReader()
   const chunks: Uint8Array[] = []
@@ -101,7 +108,7 @@ async function readLimitedBody(request: Request): Promise<string | null> {
     const { done, value } = await reader.read()
     if (done) break
     byteLength += value.byteLength
-    if (byteLength > MAX_BODY_BYTES) {
+    if (byteLength > maxBytes) {
       await reader.cancel().catch(() => undefined)
       return null
     }
@@ -193,10 +200,85 @@ async function handleCoach(request: Request, env: WorkerEnv): Promise<Response> 
   }
 }
 
+function extractFirstJsonObject(raw: string): unknown {
+  const start = raw.indexOf('{')
+  const end = raw.lastIndexOf('}')
+  if (start === -1 || end === -1 || end <= start) return null
+  try {
+    return JSON.parse(raw.slice(start, end + 1))
+  } catch {
+    return null
+  }
+}
+
+async function handleInterpret(request: Request, env: WorkerEnv): Promise<Response> {
+  if (request.method !== 'POST') return jsonResponse({ error: 'Use POST for document interpretation.' }, 405)
+
+  const contentType = request.headers.get('Content-Type') ?? ''
+  if (!/^application\/json(?:\s*;|$)/i.test(contentType)) {
+    return jsonResponse({ error: 'Send document text as JSON.' }, 415)
+  }
+
+  const contentLength = Number(request.headers.get('Content-Length') ?? 0)
+  if (Number.isFinite(contentLength) && contentLength > MAX_INTERPRET_BYTES) {
+    return jsonResponse({ error: 'That document excerpt is too large.' }, 413)
+  }
+  if (!allowRequest(request)) return jsonResponse({ error: 'Please wait before interpreting another document.' }, 429)
+
+  let body: unknown
+  try {
+    const requestBody = await readLimitedBody(request, MAX_INTERPRET_BYTES)
+    if (requestBody === null) return jsonResponse({ error: 'That document excerpt is too large.' }, 413)
+    body = JSON.parse(requestBody)
+  } catch {
+    return jsonResponse({ error: 'The request was not valid JSON.' }, 400)
+  }
+
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return jsonResponse({ error: 'Provide mode and document text.' }, 400)
+  }
+
+  const record = body as Record<string, unknown>
+  const mode = record.mode
+  if (mode !== 'bills' && mode !== 'income') {
+    return jsonResponse({ error: 'Choose bills or income interpretation mode.' }, 400)
+  }
+  const rawText = typeof record.text === 'string' ? scrubSensitivePdfText(record.text) : ''
+  if (rawText.length < 4) {
+    return jsonResponse({ error: 'Could not read enough text from that file.' }, 400)
+  }
+
+  try {
+    const systemPrompt = mode === 'bills'
+      ? 'You are Margin\'s household bill & lease interpreter. Extract shared monthly expenses (rent, utilities, electricity, water, trash, internet, groceries, parking, etc.) from the provided statement text. Return ONLY a valid JSON object matching this exact schema: {"summary":"short 1-sentence explanation","items":[{"name":"Rent","amount":1200,"dueDay":1,"category":"housing","note":"short note"}]} where category is one of "housing", "utilities", "food", "transport", "other". Do not include markdown fences.'
+      : 'You are Margin\'s roommate income & essentials interpreter. Extract the monthly net take-home pay (converting biweekly *26/12 or semi-monthly *2 to monthly if needed) and monthly personal essentials (student loans, car/transit, medical, personal expenses) from the statement text. Return ONLY a valid JSON object matching this exact schema: {"summary":"short 1-sentence explanation","personName":"optional first name","takeHome":3250,"essentials":1600,"payFrequency":"Monthly or Biweekly","notes":["short calculation note"]}. Do not include markdown fences.'
+
+    const output = await env.AI.run(MODEL, {
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: rawText.slice(0, 3500) },
+      ],
+      max_completion_tokens: 360,
+      temperature: 0.2,
+      store: false,
+      chat_template_kwargs: { enable_thinking: false },
+    })
+
+    const rawReply = extractText(output).trim()
+    const parsedJson = extractFirstJsonObject(rawReply)
+    const validated = sanitizeInterpretationPayload(mode as InterpretMode, parsedJson, rawText)
+    return jsonResponse({ ...validated, model: 'Google Gemma 4 (Cloudflare AI)' })
+  } catch {
+    const fallback = interpretDocumentLocally(mode as InterpretMode, rawText)
+    return jsonResponse({ ...fallback, model: 'Margin Smart Parser (Local Fallback)' })
+  }
+}
+
 export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
     const url = new URL(request.url)
     if (url.pathname === '/api/coach') return handleCoach(request, env)
+    if (url.pathname === '/api/interpret') return handleInterpret(request, env)
     if (url.pathname.startsWith('/api/')) return jsonResponse({ error: 'Not found.' }, 404)
     return env.ASSETS.fetch(request)
   },

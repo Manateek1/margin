@@ -47,6 +47,7 @@ import {
 } from './lib/finance'
 import { usePlanVault } from './lib/usePlanVault'
 import { MIN_PASSWORD_LENGTH } from './lib/vault'
+import { DocumentInterpreterCard, QuickDivvyStudio } from './DocumentInterpreterCard'
 import { LandingPage } from './LandingPage'
 import './App.css'
 
@@ -631,6 +632,62 @@ function App() {
   const splitFor = (mode: SplitMode, result = split) =>
     mode === 'equal' || !result.marginShares ? result.evenShares : result.marginShares
 
+  const handleAddQuickBill = (name: string, amount: number, category: BillCategory) => {
+    if (plan.bills.length >= MAX_BILLS) return
+    const created: Bill = {
+      id: newId(),
+      name: name.slice(0, 36),
+      amount,
+      dueDay: 1,
+      category,
+      paidMonths: [],
+    }
+    setPlan((current) => ({ ...current, bills: [...current.bills, created] }))
+    setNotice(`${created.name} added and divvied up.`)
+  }
+
+  const handleAddBillsFromPdf = (extractedBills: Bill[], replaceExisting: boolean) => {
+    setPlan((current) => ({
+      ...current,
+      bills: replaceExisting
+        ? extractedBills.slice(0, MAX_BILLS)
+        : [...current.bills, ...extractedBills].slice(0, MAX_BILLS),
+    }))
+    setNotice(
+      replaceExisting
+        ? `Replaced plan with ${extractedBills.length} AI-extracted costs.`
+        : `Added ${extractedBills.length} AI-extracted costs to your plan.`,
+    )
+  }
+
+  const handleApplyIncomeFromPdf = (
+    targetPersonId: string | 'new',
+    takeHome: number,
+    essentials: number,
+    suggestedName?: string,
+  ) => {
+    if (targetPersonId === 'new') {
+      if (plan.people.length >= MAX_PEOPLE) return
+      const nextIndex = plan.people.length + 1
+      const newPerson: Person = {
+        id: newId(),
+        avatar: (nextIndex * 3) % 12,
+        name: suggestedName?.trim() || `Roommate ${nextIndex}`,
+        takeHome,
+        essentials,
+      }
+      setPlan((current) => ({ ...current, people: [...current.people, newPerson] }))
+      setNotice(`Added ${newPerson.name} from PDF statement.`)
+    } else {
+      updatePerson(targetPersonId, {
+        takeHome,
+        essentials,
+        ...(suggestedName ? { name: suggestedName } : {}),
+      })
+      setNotice('Updated roommate income & essentials from PDF.')
+    }
+  }
+
   const contentHeader = pageCopy[page]
   const [today] = useState(() => new Date())
   const todayIsActiveMonth = month === currentMonthId(today)
@@ -647,6 +704,15 @@ function App() {
           setShowLanding(false)
           window.scrollTo({ top: 0, behavior: 'smooth' })
         }}
+        onUpdateBillAmount={(billId, amount) => updateBill(billId, { amount })}
+        onAddQuickBill={handleAddQuickBill}
+        onRemoveBill={(billId) => {
+          const target = plan.bills.find((b) => b.id === billId)
+          if (target) removeBill(target)
+        }}
+        onChangeSplitMode={(splitMode) => setPlan((current) => ({ ...current, splitMode }))}
+        onAddBillsFromPdf={handleAddBillsFromPdf}
+        onApplyIncomeFromPdf={handleApplyIncomeFromPdf}
       />
     )
   }
@@ -813,6 +879,24 @@ function App() {
               </div>
 
               <section className="tip-strip"><span className="tip-icon"><CircleDollarSign size={16} /></span><div><strong>A fair split doesn’t have to mean equal dollars.</strong><span>Margin compares what each person has left after essentials, so the plan can feel more balanced.</span></div><button type="button" aria-label="Learn about people and available funds" onClick={() => goToPage('people')}><ArrowRight size={16} /></button></section>
+
+              <QuickDivvyStudio
+                plan={plan}
+                onUpdateBillAmount={(billId, amount) => updateBill(billId, { amount })}
+                onAddQuickBill={handleAddQuickBill}
+                onRemoveBill={(billId) => {
+                  const target = plan.bills.find((b) => b.id === billId)
+                  if (target) removeBill(target)
+                }}
+                onChangeSplitMode={(splitMode) => setPlan((current) => ({ ...current, splitMode }))}
+              />
+
+              <DocumentInterpreterCard
+                defaultMode="bills"
+                plan={plan}
+                onAddBills={handleAddBillsFromPdf}
+                onApplyIncome={handleApplyIncomeFromPdf}
+              />
             </>
           )}
 
@@ -823,6 +907,13 @@ function App() {
                 <div className="mini-stat"><span>Paid this month</span><strong>{paidCount} <small>of {billCount}</small></strong><div className="mini-progress"><span style={{ width: `${billCount ? (paidCount / billCount) * 100 : 0}%` }} /></div></div>
                 <div className="mini-stat mini-stat--note"><span><LockKeyhole size={14} /> Private plan</span><strong>Saved on this device</strong><small>No account or bank connection.</small></div>
               </section>
+
+              <DocumentInterpreterCard
+                defaultMode="bills"
+                plan={plan}
+                onAddBills={handleAddBillsFromPdf}
+                onApplyIncome={handleApplyIncomeFromPdf}
+              />
               <section className="card full-plan-card" aria-labelledby="monthly-costs-heading">
                 <div className="card-heading-row">
                   <div><div className="section-kicker">RECURRING AND SHARED</div><h2 id="monthly-costs-heading">Your shared costs</h2><p>Track amounts, due dates, and paid status for each month.</p></div>
@@ -866,6 +957,13 @@ function App() {
           {page === 'people' && (
             <>
               <div className="roommates-toolbar"><div><strong>{plan.people.length} {plan.people.length === 1 ? 'roommate' : 'roommates'} in your plan</strong><span>Add up to {MAX_PEOPLE} roommates. Your plan is saved on this device.</span></div><button type="button" className="button button--primary" onClick={addPerson} disabled={plan.people.length >= MAX_PEOPLE}><Plus size={16} /> Add roommate</button></div>
+
+              <DocumentInterpreterCard
+                defaultMode="income"
+                plan={plan}
+                onAddBills={handleAddBillsFromPdf}
+                onApplyIncome={handleApplyIncomeFromPdf}
+              />
               <div className="people-hero-card"><span className="people-hero-icon"><Users size={19} /></span><div><strong>Start with what’s already spoken for.</strong><span>Add each roommate’s take-home pay and essentials to compare a fair split. Tap a face to choose another avatar.</span></div><span className="local-only-tag"><LockKeyhole size={13} /> DEVICE ONLY</span></div>
               <section className="people-edit-grid" aria-label="Edit roommates">
                 {plan.people.map((person, index) => {

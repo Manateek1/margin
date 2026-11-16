@@ -14,13 +14,32 @@ import {
   Wallet,
   Zap,
 } from 'lucide-react'
-import { calculateSplit, formatCurrency, type HouseholdPlan } from './lib/finance'
+import {
+  calculateSplit,
+  formatCurrency,
+  type Bill,
+  type BillCategory,
+  type HouseholdPlan,
+  type SplitMode,
+} from './lib/finance'
+import { DocumentInterpreterCard, QuickDivvyStudio } from './DocumentInterpreterCard'
 
 type PlannerPage = 'overview' | 'plan' | 'people' | 'scenarios' | 'coach' | 'security'
 
 interface LandingPageProps {
   plan: HouseholdPlan
   onOpenPlanner: (targetPage?: PlannerPage) => void
+  onUpdateBillAmount: (billId: string, amount: number) => void
+  onAddQuickBill: (name: string, amount: number, category: BillCategory) => void
+  onRemoveBill: (billId: string) => void
+  onChangeSplitMode: (mode: SplitMode) => void
+  onAddBillsFromPdf: (bills: Bill[], replaceExisting: boolean) => void
+  onApplyIncomeFromPdf: (
+    targetPersonId: string | 'new',
+    takeHome: number,
+    essentials: number,
+    suggestedName?: string,
+  ) => void
 }
 
 function formatOrdinal(day: number): string {
@@ -32,7 +51,16 @@ function formatOrdinal(day: number): string {
   return `${day}th`
 }
 
-export function LandingPage({ plan, onOpenPlanner }: LandingPageProps) {
+export function LandingPage({
+  plan,
+  onOpenPlanner,
+  onUpdateBillAmount,
+  onAddQuickBill,
+  onRemoveBill,
+  onChangeSplitMode,
+  onAddBillsFromPdf,
+  onApplyIncomeFromPdf,
+}: LandingPageProps) {
   const [previewDelta, setPreviewDelta] = useState<number>(120)
   const baseTotal = plan.bills.reduce((sum, bill) => sum + bill.amount, 0) || 1800
   const baseSplit = calculateSplit(plan.people, baseTotal)
@@ -292,6 +320,25 @@ export function LandingPage({ plan, onOpenPlanner }: LandingPageProps) {
             </div>
           </div>
         </section>
+
+        {/* LIVE INTERACTIVE RENT & EXPENSE DIVVY + AI PDF INTERPRETER */}
+        <div id="lp-divvy" className="lp-interactive-stack">
+          <QuickDivvyStudio
+            plan={plan}
+            onUpdateBillAmount={onUpdateBillAmount}
+            onAddQuickBill={onAddQuickBill}
+            onRemoveBill={onRemoveBill}
+            onChangeSplitMode={onChangeSplitMode}
+            onOpenFullPlanner={() => onOpenPlanner('plan')}
+          />
+
+          <DocumentInterpreterCard
+            defaultMode="bills"
+            plan={plan}
+            onAddBills={onAddBillsFromPdf}
+            onApplyIncome={onApplyIncomeFromPdf}
+          />
+        </div>
 
         {/* SECTION 2: Two Bento Cards ("Get the Most Out of Your Shared Home") */}
         <section id="lp-features" className="lp-section" aria-labelledby="lp-bento-heading">
