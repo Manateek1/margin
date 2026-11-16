@@ -329,7 +329,6 @@ function App() {
   const [tone, setTone] = useState<Tone>('warm')
   const [goal, setGoal] = useState<CoachGoal>('start-talk')
   const [coachMessage, setCoachMessage] = useState('')
-  const [coachModel, setCoachModel] = useState('')
   const [coachBusy, setCoachBusy] = useState(false)
   const [coachError, setCoachError] = useState('')
   const [copyMessageError, setCopyMessageError] = useState('')
@@ -351,7 +350,6 @@ function App() {
     const timer = window.setTimeout(() => {
       setPage('overview')
       setCoachMessage('')
-      setCoachModel('')
       setCoachError('')
       setUndoBill(null)
       setUndoPerson(null)
@@ -503,7 +501,6 @@ function App() {
     setScenarioKind('expense')
     setScenarioApplied(false)
     setCoachMessage('')
-    setCoachModel('')
     setCoachError('')
     setUndoPerson(null)
     setUndoBill(null)
@@ -561,10 +558,8 @@ function App() {
         throw new Error(typeof payload.error === 'string' ? payload.error : 'The coach could not reply just now.')
       }
       setCoachMessage(payload.message.trim())
-      setCoachModel(typeof payload.model === 'string' ? payload.model : 'Cloudflare Workers AI')
     } catch (error) {
       setCoachMessage('')
-      setCoachModel('')
       setCoachError(error instanceof Error && error.message !== 'Failed to fetch'
         ? error.message
         : 'Could not reach the AI coach. Check your connection, then try again.')
@@ -1016,9 +1011,9 @@ function App() {
                 <h2>Pick what you want to say.</h2>
                 <p className="coach-config-intro">The coach writes a fresh opener based on your goal and tone. Your names, income, bills, and split stay right here in your browser.</p>
                 <div className="goal-list" role="group" aria-label="Conversation goal">
-                  {GOALS.map((item) => <button type="button" key={item.value} disabled={coachBusy} className={`goal-option${goal === item.value ? ' goal-option--selected' : ''}`} aria-pressed={goal === item.value} onClick={() => { setGoal(item.value); setCoachMessage(''); setCoachModel(''); setCoachError('') }}><span className="goal-radio">{goal === item.value && <span />}</span><span className="goal-option-copy"><strong>{item.label}</strong><small>{item.description}</small></span><ArrowRight size={15} /></button>)}
+                  {GOALS.map((item) => <button type="button" key={item.value} disabled={coachBusy} className={`goal-option${goal === item.value ? ' goal-option--selected' : ''}`} aria-pressed={goal === item.value} onClick={() => { setGoal(item.value); setCoachMessage(''); setCoachError('') }}><span className="goal-radio">{goal === item.value && <span />}</span><span className="goal-option-copy"><strong>{item.label}</strong><small>{item.description}</small></span><ArrowRight size={15} /></button>)}
                 </div>
-                <div className="tone-picker tone-picker--large" role="group" aria-label="AI coach tone"><span className="field-label">Choose a tone</span><div>{TONES.map((item) => <button type="button" key={item.value} className={`tone-chip${tone === item.value ? ' tone-chip--selected' : ''}`} aria-pressed={tone === item.value} disabled={coachBusy} onClick={() => { setTone(item.value); setCoachMessage(''); setCoachModel(''); setCoachError('') }}><strong>{item.label}</strong><small>{item.helper}</small></button>)}</div></div>
+                <div className="tone-picker tone-picker--large" role="group" aria-label="AI coach tone"><span className="field-label">Choose a tone</span><div>{TONES.map((item) => <button type="button" key={item.value} className={`tone-chip${tone === item.value ? ' tone-chip--selected' : ''}`} aria-pressed={tone === item.value} disabled={coachBusy} onClick={() => { setTone(item.value); setCoachMessage(''); setCoachError('') }}><strong>{item.label}</strong><small>{item.helper}</small></button>)}</div></div>
                 <button type="button" className="button button--primary coach-generate-button" onClick={draftConversation} disabled={coachBusy}>
                   {coachBusy ? <RefreshCw className="spin" size={17} /> : <Sparkles size={17} />}
                   {coachBusy ? 'Writing your opener…' : coachMessage ? 'Draft another version' : 'Generate with AI'}
