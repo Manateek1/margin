@@ -47,6 +47,7 @@ import {
 } from './lib/finance'
 import { usePlanVault } from './lib/usePlanVault'
 import { MIN_PASSWORD_LENGTH } from './lib/vault'
+import { LandingPage } from './LandingPage'
 import './App.css'
 
 const STORAGE_KEY = 'margin-plan-v3'
@@ -265,7 +266,15 @@ function MoneyField({
   )
 }
 
-function Brand() {
+function Brand({ onClick }: { onClick?: () => void }) {
+  if (onClick) {
+    return (
+      <button type="button" className="brand-lockup brand-lockup--button" onClick={onClick} title="Back to landing page">
+        <span className="brand-mark"><House size={20} strokeWidth={2.4} aria-hidden="true" /></span>
+        <span>Margin</span>
+      </button>
+    )
+  }
   return (
     <div className="brand-lockup">
       <span className="brand-mark"><House size={20} strokeWidth={2.4} aria-hidden="true" /></span>
@@ -304,6 +313,7 @@ function LockScreen({ busy, message, onUnlock }: { busy: boolean; message: strin
 
 function App() {
   const { plan, setPlan, status: vaultStatus, saveState, busy: vaultBusy, message: vaultMessage, setMessage: setVaultMessage, enable: enableVault, unlock: unlockProtectedPlan, lock: lockVault, disable: disableVault } = usePlanVault(readPlan, sanitizeStoredPlan, cloneDefaultPlan)
+  const [showLanding, setShowLanding] = useState(true)
   const [page, setPage] = useState<Page>('overview')
   const [month, setMonth] = useState(currentMonthId)
   const [scenarioAmount, setScenarioAmount] = useState(120)
@@ -628,10 +638,23 @@ function App() {
 
   if (vaultStatus === 'locked') return <LockScreen busy={vaultBusy} message={vaultMessage} onUnlock={unlockProtectedPlan} />
 
+  if (showLanding) {
+    return (
+      <LandingPage
+        plan={plan}
+        onOpenPlanner={(targetPage) => {
+          if (targetPage) setPage(targetPage)
+          setShowLanding(false)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
+      />
+    )
+  }
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <Brand />
+        <Brand onClick={() => { setShowLanding(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }} />
         <div className="workspace-label">YOUR SHARED HOME</div>
         <nav className="primary-nav" aria-label="Primary navigation">
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
@@ -666,8 +689,15 @@ function App() {
 
       <main className="main-content">
         <header className="topbar">
-          <div className="breadcrumb"><span>Home</span><span className="crumb-separator">/</span><strong>{NAV_ITEMS.find((item) => item.id === page)?.label}</strong></div>
+          <div className="breadcrumb">
+            <button type="button" className="crumb-home-link" onClick={() => { setShowLanding(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>Home</button>
+            <span className="crumb-separator">/</span>
+            <strong>{NAV_ITEMS.find((item) => item.id === page)?.label}</strong>
+          </div>
           <div className="topbar-actions">
+            <button type="button" className="topbar-landing-btn" onClick={() => { setShowLanding(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+              Landing page
+            </button>
             <button type="button" className="icon-button top-copy" aria-label="Copy plan summary" title="Copy plan summary" onClick={copySummary}>
               <Copy size={16} aria-hidden="true" />
             </button>
