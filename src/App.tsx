@@ -721,7 +721,6 @@ function App() {
     <div className="app-shell">
       <aside className="sidebar">
         <Brand onClick={() => { setShowLanding(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }} />
-        <div className="workspace-label">YOUR SHARED HOME</div>
         <nav className="primary-nav" aria-label="Primary navigation">
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
             <button
@@ -749,7 +748,6 @@ function App() {
           <button type="button" className="reset-link" onClick={resetDemo} disabled={vaultBusy}>
             <RotateCcw size={14} aria-hidden="true" /> Reset example plan
           </button>
-          <div className="sidebar-version">MADE FOR LIFE TOGETHER</div>
         </div>
       </aside>
 
@@ -851,7 +849,7 @@ function App() {
                 <div className="overview-side-stack">
                   <section className="card scenario-quick-card" aria-labelledby="scenario-quick-title">
                     <div className="card-heading-row card-heading-row--compact">
-                      <div><div className="section-kicker">PLAN FOR A CHANGE</div><h2 id="scenario-quick-title">What if something shifts?</h2><p>Preview a one-time cost or credit.</p></div>
+                      <div><h2 id="scenario-quick-title">What if something shifts?</h2><p>Preview a one-time cost or credit.</p></div>
                       <span className="round-icon round-icon--gold"><Zap size={17} aria-hidden="true" /></span>
                     </div>
                     <div className="quick-scenario-controls">
@@ -866,7 +864,7 @@ function App() {
 
                   <section className="coach-teaser" aria-labelledby="coach-teaser-title">
                     <div className="coach-teaser-glow" />
-                    <div className="coach-teaser-top"><span className="coach-mark"><Sparkles size={17} aria-hidden="true" /></span><span className="ai-live-label"><span /> AI COACH</span></div>
+                    <div className="coach-teaser-top"><span className="coach-mark"><Sparkles size={17} aria-hidden="true" /></span></div>
                     <h2 id="coach-teaser-title">The numbers are easy.<br /><em>The words can be too.</em></h2>
                     <p>Get a thoughtful opener for a real conversation about your shared plan.</p>
                     <button type="button" className="button button--dark" onClick={() => goToPage('coach')}>Talk it through <ArrowRight size={15} /></button>
@@ -902,7 +900,7 @@ function App() {
               <section className="plan-summary-row">
                 <div className="mini-stat"><span>Total shared costs</span><strong>{formatCurrency(baseTotal)}</strong><small>For {formatMonth(month)}</small></div>
                 <div className="mini-stat"><span>Paid this month</span><strong>{paidCount} <small>of {billCount}</small></strong><div className="mini-progress"><span style={{ width: `${billCount ? (paidCount / billCount) * 100 : 0}%` }} /></div></div>
-                <div className="mini-stat mini-stat--note"><span><LockKeyhole size={14} /> Private plan</span><strong>Saved on this device</strong><small>No account or bank connection.</small></div>
+                <div className="mini-stat"><span>Room after plan</span><strong>{formatCurrency(availableAfterPlan)}</strong><small>{formatCurrency(split.totalAvailable)} available after essentials</small></div>
               </section>
 
               <DocumentInterpreterCard
@@ -913,7 +911,7 @@ function App() {
               />
               <section className="card full-plan-card" aria-labelledby="monthly-costs-heading">
                 <div className="card-heading-row">
-                  <div><div className="section-kicker">RECURRING AND SHARED</div><h2 id="monthly-costs-heading">Your shared costs</h2><p>Track amounts, due dates, and paid status for each month.</p></div>
+                  <div><h2 id="monthly-costs-heading">Your shared costs</h2><p>Track amounts, due dates, and paid status for each month.</p></div>
                   <div className="button-row"><button type="button" className="button button--secondary button--small" onClick={exportCsv}><Download size={15} /> Export CSV</button><button type="button" className="button button--primary button--small" onClick={() => { setNewBillOpen((open) => !open); setBillError('') }}>{newBillOpen ? <X size={15} /> : <Plus size={15} />}{newBillOpen ? 'Close' : 'Add a cost'}</button></div>
                 </div>
 
@@ -961,12 +959,12 @@ function App() {
                 onAddBills={handleAddBillsFromPdf}
                 onApplyIncome={handleApplyIncomeFromPdf}
               />
-              <div className="people-hero-card"><span className="people-hero-icon"><Users size={19} /></span><div><strong>Start with what’s already spoken for.</strong><span>Add each roommate’s take-home pay and essentials to compare a fair split. Tap a face to choose another avatar.</span></div><span className="local-only-tag"><LockKeyhole size={13} /> DEVICE ONLY</span></div>
+              <div className="people-hero-card"><span className="people-hero-icon"><Users size={19} /></span><div><strong>Start with what’s already spoken for.</strong><span>Add each roommate’s take-home pay and essentials to compare a fair split. Tap a face to choose another avatar.</span></div></div>
               <section className="people-edit-grid" aria-label="Edit roommates">
                 {plan.people.map((person, index) => {
                   const available = baselineSplit.available[index]
                   return <article className="person-card" key={person.id}>
-                    <div className="person-card-top"><button type="button" className="avatar-picker" aria-label={`Change avatar for ${person.name || `roommate ${index + 1}`}`} title="Change avatar" onClick={() => updatePerson(person.id, { avatar: (person.avatar + 1) % 12 })}><RoommateAvatar person={person} /><span>Change</span></button><div><span className="section-kicker">ROOMMATE {index + 1}</span><strong>{person.name || `Roommate ${index + 1}`}</strong></div><button type="button" className="remove-person-button" aria-label={`Remove ${person.name || `roommate ${index + 1}`}`} title={plan.people.length <= 1 ? 'Keep at least one roommate' : 'Remove roommate'} disabled={plan.people.length <= 1} onClick={() => removePerson(person)}><Trash2 size={17} /></button></div>
+                    <div className="person-card-top"><button type="button" className="avatar-picker" aria-label={`Change avatar for ${person.name || `roommate ${index + 1}`}`} title="Change avatar" onClick={() => updatePerson(person.id, { avatar: (person.avatar + 1) % 12 })}><RoommateAvatar person={person} /><span>Change</span></button><div><strong>{person.name || `Roommate ${index + 1}`}</strong></div><button type="button" className="remove-person-button" aria-label={`Remove ${person.name || `roommate ${index + 1}`}`} title={plan.people.length <= 1 ? 'Keep at least one roommate' : 'Remove roommate'} disabled={plan.people.length <= 1} onClick={() => removePerson(person)}><Trash2 size={17} /></button></div>
                     <label className="name-field"><span>Name</span><input maxLength={28} value={person.name} onChange={(event) => updatePerson(person.id, { name: event.target.value })} placeholder={`Roommate ${index + 1}`} /></label>
                     <div className="money-field-grid"><MoneyField label="Monthly take-home" value={person.takeHome} onChange={(takeHome) => updatePerson(person.id, { takeHome })} hint="After tax and deductions" /><MoneyField label="Monthly essentials" value={person.essentials} onChange={(essentials) => updatePerson(person.id, { essentials })} hint="Personal bills and necessities" /></div>
                     <div className="available-summary"><div><span>Left after essentials</span><strong>{formatCurrency(available)}</strong></div><span className="available-summary-icon"><TrendingUp size={17} /></span></div>
@@ -974,7 +972,7 @@ function App() {
                   </article>
                 })}
               </section>
-              <section className="card method-card"><div className="method-card-icon"><Sparkles size={18} /></div><div><div className="section-kicker">HOW MARGIN CALCULATES FAIR</div><h2>Share the effort, not just the bill.</h2><p>The available-income split asks each person to contribute the same percentage of their own funds after essentials. You can compare it with an equal-dollar split and choose what feels right.</p></div><button type="button" className="button button--secondary" onClick={() => goToPage('overview')}>Compare splits <ArrowRight size={15} /></button></section>
+              <section className="card method-card"><div className="method-card-icon"><Sparkles size={18} /></div><div><h2>Share the effort, not just the bill.</h2><p>The available-income split asks each person to contribute the same percentage of their own funds after essentials. You can compare it with an equal-dollar split and choose what feels right.</p></div><button type="button" className="button button--secondary" onClick={() => goToPage('overview')}>Compare splits <ArrowRight size={15} /></button></section>
             </>
           )}
 
@@ -982,7 +980,7 @@ function App() {
             <>
               <div className="scenario-layout">
                 <section className="card scenario-builder-card" aria-labelledby="scenario-builder-title">
-                  <div className="card-heading-row"><div><div className="section-kicker">ONE CHANGE AT A TIME</div><h2 id="scenario-builder-title">Build a what-if</h2><p>Adjust this preview without changing your saved monthly costs.</p></div><span className="round-icon round-icon--gold"><Zap size={18} /></span></div>
+                  <div className="card-heading-row"><div><h2 id="scenario-builder-title">Build a what-if</h2><p>Adjust this preview without changing your saved monthly costs.</p></div><span className="round-icon round-icon--gold"><Zap size={18} /></span></div>
                   <div className="scenario-kind-picker" role="group" aria-label="Choose a change type"><button type="button" className={scenarioKind === 'expense' ? 'is-selected' : ''} aria-pressed={scenarioKind === 'expense'} onClick={() => setScenarioKind('expense')}><span className="change-icon change-icon--cost"><TrendingUp size={16} /></span><span><strong>New cost</strong><small>Extra shared expense</small></span></button><button type="button" className={scenarioKind === 'credit' ? 'is-selected' : ''} aria-pressed={scenarioKind === 'credit'} onClick={() => setScenarioKind('credit')}><span className="change-icon change-icon--credit"><CircleDollarSign size={16} /></span><span><strong>Credit or savings</strong><small>Reduce the monthly total</small></span></button></div>
                   <MoneyField label={scenarioKind === 'expense' ? 'One-time expense' : 'One-time credit'} value={scenarioAmount} onChange={setScenarioAmount} hint="This preview isn’t added to recurring costs." />
                   <div className="preset-row"><span>Quick try</span>{[50, 120, 300].map((amount) => <button type="button" key={amount} className={scenarioAmount === amount ? 'is-selected' : ''} onClick={() => setScenarioAmount(amount)}>{formatCurrency(amount)}</button>)}</div>
@@ -991,7 +989,6 @@ function App() {
                 </section>
 
                 <section className="card scenario-results-card" aria-labelledby="scenario-results-title">
-                  <div className="results-label"><span className="results-label-icon"><Layers3 size={15} /></span> YOUR PLAN, SIDE BY SIDE</div>
                   <h2 id="scenario-results-title">See the difference</h2>
                   <p className="scenario-results-subtitle">{scenarioApplied ? 'Your preview is included in the new split below.' : 'Apply your change to preview an updated split.'}</p>
                   <div className="scenario-compare-box">
@@ -1015,8 +1012,7 @@ function App() {
           {page === 'coach' && (
             <section className="coach-page-grid">
               <div className="card coach-config-card">
-                <div className="coach-page-mark"><span className="coach-mark coach-mark--large"><Sparkles size={20} /></span><span className="ai-live-label"><span /> LIVE AI · FREE MODEL</span></div>
-                <div className="section-kicker">FIRST, WHAT’S THE MOMENT?</div>
+                <div className="coach-page-mark"><span className="coach-mark coach-mark--large"><Sparkles size={20} /></span></div>
                 <h2>Pick what you want to say.</h2>
                 <p className="coach-config-intro">The coach writes a fresh opener based on your goal and tone. Your names, income, bills, and split stay right here in your browser.</p>
                 <div className="goal-list" role="group" aria-label="Conversation goal">
@@ -1032,14 +1028,13 @@ function App() {
 
               <div className="coach-result-column">
                 <section className={`coach-output-card${coachMessage ? ' coach-output-card--ready' : ''}`} aria-live="polite">
-                  <div className="output-card-header"><div><div className="section-kicker">YOUR CONVERSATION STARTER</div><h2>{coachMessage ? 'A fresh way to begin.' : 'Your draft will appear here.'}</h2></div>{coachMessage ? <span className="generated-badge"><CheckCircle2 size={13} /> Generated</span> : <span className="output-empty-icon"><MessageCircle size={18} /></span>}</div>
-                  {coachBusy ? <div className="ai-loading-state"><span className="ai-loading-orb"><Sparkles size={18} /></span><strong>Finding the right words…</strong><span>Margin is drafting a short, respectful opener.</span></div> : coachMessage ? <><blockquote>{coachMessage}</blockquote><div className="generated-by"><span className="generated-model"><Sparkles size={13} /> {coachModel || 'Cloudflare Workers AI'}</span><span>New draft · your selected tone is {TONES.find((item) => item.value === tone)?.label.toLowerCase()}</span></div></> : <div className="coach-empty-state"><span className="quote-symbol">“</span><p>Choose a conversation goal and tone, then ask Margin to draft an opener you can actually use.</p><div className="sample-prompt"><span>YOUR GOAL</span><strong>{selectedGoal.label}</strong><small>{selectedGoal.description}</small></div></div>}
+                  <div className="output-card-header"><div><h2>{coachMessage ? 'A fresh way to begin.' : 'Your draft will appear here.'}</h2></div>{coachMessage ? <span className="generated-badge"><CheckCircle2 size={13} /> Generated</span> : <span className="output-empty-icon"><MessageCircle size={18} /></span>}</div>
+                  {coachBusy ? <div className="ai-loading-state"><span className="ai-loading-orb"><Sparkles size={18} /></span><strong>Finding the right words…</strong><span>Margin is drafting a short, respectful opener.</span></div> : coachMessage ? <><blockquote>{coachMessage}</blockquote></> : <div className="coach-empty-state"><span className="quote-symbol">“</span><p>Choose a conversation goal and tone, then ask Margin to draft an opener you can actually use.</p><div className="sample-prompt"><strong>{selectedGoal.label}</strong><small>{selectedGoal.description}</small></div></div>}
                   {coachError && <div className="coach-error" role="alert"><AlertTriangle size={16} /><span>{coachError}</span></div>}
                   {coachMessage && <div className="coach-output-actions"><button type="button" className="button button--secondary button--small" onClick={copyCoachDraft}><Copy size={14} /> Copy full draft</button><button type="button" className="text-link" onClick={draftConversation} disabled={coachBusy}><RefreshCw size={14} /> Try another</button></div>}
                   {copyMessageError && <p className="form-error" role="alert">{copyMessageError}</p>}
                 </section>
-                <section className="card local-personalization-card"><span className="local-personalization-icon"><LockKeyhole size={16} /></span><div><div className="section-kicker">ADDED ON THIS DEVICE</div><h3>Keep the real numbers out of the cloud.</h3><p>{privateContext}</p></div></section>
-                <div className="coach-limits-note"><Zap size={14} /> AI uses Cloudflare’s free daily allowance. Your budget calculations work even when the AI is offline.</div>
+                <section className="card local-personalization-card"><span className="local-personalization-icon"><LockKeyhole size={16} /></span><div><h3>Keep the real numbers out of the cloud.</h3><p>{privateContext}</p></div></section>
               </div>
             </section>
           )}
@@ -1070,8 +1065,6 @@ function App() {
               <aside className="security-explainer"><h2>Made for your device.</h2><p>Protection applies to this browser and address. It doesn’t create an account, invite roommates, or sync plans across devices.</p><div><LockKeyhole size={18} /><span>Only your selected goal and tone are sent to the AI coach.</span></div></aside>
             </div>
           )}
-
-          <footer className="page-footer"><span>Margin</span><span className="footer-divider" /><span>More clarity for the home you share.</span></footer>
         </div>
       </main>
 

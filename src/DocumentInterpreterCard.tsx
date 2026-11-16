@@ -77,7 +77,6 @@ export function QuickDivvyStudio({
     <section className="card divvy-studio-card" aria-labelledby="divvy-studio-heading">
       <div className="divvy-studio-header">
         <div>
-          <span className="section-kicker">INSTANT RENT &amp; EXPENSE DIVVY</span>
           <h2 id="divvy-studio-heading">Put in rent &amp; expenses—watch it divvy up.</h2>
           <p>
             Type your monthly rent, utilities, groceries, or any shared bill below. Margin splits
@@ -261,7 +260,6 @@ export function QuickDivvyStudio({
 
           {onOpenFullPlanner && (
             <div className="divvy-studio-footer">
-              <span>Changes save automatically to your browser plan.</span>
               <button type="button" className="button button--primary" onClick={onOpenFullPlanner}>
                 Open in Full Planner
               </button>
@@ -416,9 +414,6 @@ export function DocumentInterpreterCard({
     <section className="card pdf-interpreter-card" aria-labelledby="pdf-interpreter-heading">
       <div className="pdf-interpreter-top">
         <div>
-          <span className="section-kicker">
-            <Sparkles size={13} aria-hidden="true" /> AI PDF &amp; STATEMENT INTERPRETER
-          </span>
           <h2 id="pdf-interpreter-heading">
             Upload a PDF—let AI extract &amp; divvy the numbers.
           </h2>
@@ -563,9 +558,6 @@ export function DocumentInterpreterCard({
               </span>
               <strong>{(result as BillsInterpretation).summary}</strong>
             </div>
-            <span className="ai-model-tag">
-              <Sparkles size={13} aria-hidden="true" /> {result.model}
-            </span>
           </div>
 
           {(result as BillsInterpretation).items.length > 0 && (
@@ -644,9 +636,6 @@ export function DocumentInterpreterCard({
               </span>
               <strong>{(result as IncomeInterpretation).summary}</strong>
             </div>
-            <span className="ai-model-tag">
-              <Sparkles size={13} aria-hidden="true" /> {result.model}
-            </span>
           </div>
 
           <div className="pdf-income-metrics">

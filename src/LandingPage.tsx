@@ -180,7 +180,6 @@ export function LandingPage({
             <div className="lp-device lp-device--light">
               <div className="lp-device-top">
                 <strong>Shared Home</strong>
-                <span className="lp-device-pill">Nov 2026</span>
               </div>
 
               <div className="lp-device-search">
@@ -255,7 +254,6 @@ export function LandingPage({
             <div className="lp-device lp-device--dark">
               <div className="lp-device-top lp-device-top--dark">
                 <span>✦ What-If Curve</span>
-                <span className="lp-device-pill lp-device-pill--dark">Live Math</span>
               </div>
 
               <div className="lp-dark-price-row">
@@ -853,7 +851,6 @@ export function LandingPage({
               <ArrowRight size={16} aria-hidden="true" />
             </button>
           </div>
-          <small>Bay Valley Hacks 2026 · Elevate the Ordinary</small>
         </div>
       </footer>
     </div>
