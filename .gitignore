@@ -27,3 +27,8 @@ dist-ssr
 .wrangler
 .dev.vars*
 
+
+# HyperFrames exports
+video/*/exports/
+video/*/.hyperframes/
+

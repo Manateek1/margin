@@ -1,0 +1,59 @@
+{
+  "total_duration": 67.44,
+  "beats": [
+    {
+      "id": "scene1",
+      "scene_start": 0.0,
+      "voice_start": 0.35,
+      "voice_duration": 9.82,
+      "scene_duration": 10.72,
+      "scene_end": 10.72,
+      "text": "Splitting bills with roommates usually means awkward texts and rigid fifty-fifty math. Meet Margin: the privacy-first home planner that keeps roommates in sync."
+    },
+    {
+      "id": "scene2",
+      "scene_start": 10.72,
+      "voice_start": 10.72,
+      "voice_duration": 11.78,
+      "scene_duration": 12.33,
+      "scene_end": 23.05,
+      "text": "Instead of a flat fifty-fifty split that ignores different incomes and personal essentials, Margin calculates each roommate's true available margin, so everyone contributes the same fair effort."
+    },
+    {
+      "id": "scene3",
+      "scene_start": 23.05,
+      "voice_start": 23.05,
+      "voice_duration": 11.59,
+      "scene_duration": 12.14,
+      "scene_end": 35.19,
+      "text": "Track recurring bills by due date, mark month-specific paid status, and export to C S V, or preview a one-twenty dollar what-if expense side by side without touching your saved plan."
+    },
+    {
+      "id": "scene4",
+      "scene_start": 35.19,
+      "voice_start": 35.19,
+      "voice_duration": 13.15,
+      "scene_duration": 13.7,
+      "scene_end": 48.89,
+      "text": "Need to bring up a bill change? Margin's AI coach runs Google Gemma 4 on Cloudflare Workers AI. Only your chosen goal and tone reach the cloud, while real names and dollar amounts are added strictly on your device."
+    },
+    {
+      "id": "scene5",
+      "scene_start": 48.89,
+      "voice_start": 48.89,
+      "voice_duration": 10.01,
+      "scene_duration": 10.56,
+      "scene_end": 59.45,
+      "text": "And with Margin's local password vault, your plan is encrypted in the browser with A E S two-fifty-six G C M, and locks automatically on every reload."
+    },
+    {
+      "id": "scene6",
+      "scene_start": 59.45,
+      "voice_start": 59.45,
+      "voice_duration": 6.84,
+      "scene_duration": 7.99,
+      "scene_end": 67.44,
+      "text": "Margin. Elevate the ordinary kitchen-table budget. Try it live at get margin dot pages dot dev."
+    }
+  ]
+}

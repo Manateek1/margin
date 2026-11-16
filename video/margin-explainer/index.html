@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920, initial-scale=1" />
+    <title>Margin — Roommates, in sync (Full Product Explainer)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f6f8f4; --bg-soft: #edf3e8; --card: #ffffff; --line: #d8e4d2; --line-strong: #bfd2b6;
+        --ink: #152016; --muted: #3d4d3a; --green: #486b30; --green-bright: #587e3e; --green-tint: #e5efe0;
+        --canopy: #223320; --cream: #f4faef; --cream-muted: #d6e8ce;
+        --amber-bg: #fdf3e4; --amber-line: #f0d4a8; --amber-ink: #6e3e0c;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; margin: 0; overflow: hidden;
+        background: var(--bg); color: var(--ink);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision;
+      }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); isolation: isolate; }
+      .bg-decor { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+      .bg-dots { position: absolute; inset: 0; background-image: radial-gradient(#cbe0c0 1.4px, transparent 1.4px); background-size: 32px 32px; opacity: 0.45; }
+      .bg-orb { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.55; }
+      .bg-orb--one { top: -140px; right: -80px; width: 640px; height: 640px; background: radial-gradient(circle, #d6e9cb 0%, rgba(214, 233, 203, 0) 70%); }
+      .bg-orb--two { bottom: -160px; left: -100px; width: 680px; height: 680px; background: radial-gradient(circle, #dcecd2 0%, rgba(220, 236, 210, 0) 70%); }
+
+      .chrome-header {
+        position: absolute; top: 0; left: 0; right: 0; height: 86px; padding: 0 72px;
+        display: flex; align-items: center; justify-content: space-between; z-index: 30;
+        border-top: none; border-bottom: 1px solid var(--line); background: rgba(246, 248, 244, 0.92);
+      }
+      .brand-lockup { display: flex; align-items: center; gap: 14px; }
+      .brand-icon { width: 40px; height: 40px; border-radius: 12px; }
+      .brand-name { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.04em; color: var(--ink); }
+      .brand-tag { margin-left: 8px; padding: 6px 14px; border-radius: 999px; background: var(--green-tint); border: 1px solid var(--line-strong); color: var(--green); font-size: 16px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+      .header-right { display: flex; align-items: center; gap: 18px; }
+      .hackathon-pill { padding: 7px 16px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--muted); font-size: 16px; font-weight: 600; }
+      .url-pill { padding: 7px 18px; border-radius: 999px; background: var(--canopy); color: var(--cream); font-size: 16px; font-weight: 700; letter-spacing: 0.01em; }
+
+      .chrome-footer {
+        position: absolute; bottom: 0; left: 0; right: 0; height: 76px; padding: 0 72px;
+        display: flex; align-items: center; justify-content: space-between; z-index: 30;
+        border-top: 1px solid var(--line); background: rgba(246, 248, 244, 0.94);
+      }
+      .chapter-pills { display: flex; align-items: center; gap: 12px; }
+      .chapter-pill { padding: 6px 14px; border-radius: 999px; background: var(--bg-soft); border: 1px solid var(--line); color: var(--muted); font-size: 16px; font-weight: 600; }
+      .chapter-pill--active { background: var(--green); border-color: var(--green); color: #ffffff; }
+      .footer-meta { color: var(--muted); font-size: 17px; font-weight: 600; }
+
+      .scene {
+        position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; padding: 108px 72px 96px;
+        display: grid; grid-template-columns: 820px 1fr; gap: 48px; align-items: center;
+        background: var(--bg); overflow: hidden;
+      }
+      #scene1 { z-index: 1; opacity: 1; }
+      #scene2 { z-index: 2; opacity: 0; }
+      #scene3 { z-index: 3; opacity: 0; }
+      #scene4 { z-index: 4; opacity: 0; }
+      #scene5 { z-index: 5; opacity: 0; }
+      #scene6 { z-index: 6; opacity: 0; grid-template-columns: 1fr; justify-items: center; }
+
+      .col-stack { display: flex; flex-direction: column; gap: 20px; }
+      .kicker {
+        display: inline-flex; align-items: center; gap: 10px; align-self: flex-start;
+        padding: 7px 16px; border-radius: 999px; background: var(--green-tint);
+        border: 1px solid var(--line-strong); color: var(--green); font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      }
+      .scene-title { margin: 0; font-family: "Space Grotesk", "Inter", sans-serif; font-size: 62px; font-weight: 700; line-height: 1.04; letter-spacing: -0.045em; color: var(--ink); }
+      .scene-title span { color: var(--green); }
+      .scene-lead { margin: 0; font-size: 23px; line-height: 1.45; font-weight: 500; color: var(--muted); }
+
+      .fern-hero-card {
+        position: relative; overflow: hidden; border-radius: 26px; padding: 28px 32px;
+        background: var(--canopy); border: 1px solid #334a2f; color: var(--cream);
+        display: grid; grid-template-columns: 1fr 1fr; gap: 28px; box-shadow: 0 20px 44px rgba(21, 32, 22, 0.14);
+      }
+      .fern-hero-card .fern-art {
+        position: absolute; right: -20px; top: -10px; width: 280px; height: 220px;
+        background: center / cover no-repeat url("./assets/fern.webp"); opacity: 0.28; mix-blend-mode: screen; pointer-events: none;
+      }
+      .fern-metric { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 6px; }
+      .fern-metric + .fern-metric { border-left: 1px solid rgba(244, 250, 239, 0.22); padding-left: 28px; }
+      .fern-metric-label { font-size: 18px; font-weight: 600; color: var(--cream-muted); }
+      .fern-metric-value { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 54px; font-weight: 700; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: #ffffff; }
+      .fern-metric-sub { font-size: 17px; font-weight: 500; color: var(--cream-muted); }
+
+      .browser-stage { position: relative; display: flex; flex-direction: column; gap: 18px; }
+      .browser-window { background: var(--card); border: 1px solid var(--line-strong); border-radius: 24px; overflow: hidden; box-shadow: 0 24px 60px rgba(21, 32, 22, 0.12); }
+      .browser-bar { height: 44px; padding: 0 18px; background: var(--bg-soft); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+      .browser-dots { display: flex; gap: 7px; }
+      .browser-dot { width: 11px; height: 11px; border-radius: 50%; background: #b8ccb0; }
+      .browser-address { margin-left: 10px; padding: 4px 14px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); color: var(--muted); font-size: 16px; font-weight: 600; }
+      .browser-viewport { width: 100%; height: 600px; overflow: hidden; background: var(--bg); }
+      .browser-viewport img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+      .callout-banner { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-radius: 18px; background: var(--card); border: 1px solid var(--line-strong); box-shadow: 0 12px 28px rgba(21, 32, 22, 0.08); }
+      .callout-banner strong { font-size: 20px; color: var(--ink); }
+      .callout-banner span { padding: 6px 14px; border-radius: 999px; background: var(--green-tint); color: var(--green); font-size: 17px; font-weight: 700; }
+
+      .avatar-sprite {
+        width: 54px; height: 54px; border-radius: 50%; background-image: url("./assets/roommates.webp");
+        background-repeat: no-repeat; background-size: 400% 300%; border: 2px solid var(--line-strong); flex: 0 0 54px;
+      }
+      .avatar-maya { background-position: 66.666% 0%; }
+      .avatar-leo { background-position: 0% 0%; }
+      .avatar-3 { background-position: 33.333% 50%; }
+      .avatar-4 { background-position: 100% 50%; }
+
+      .roommate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .ui-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 22px 24px; box-shadow: 0 12px 30px rgba(21, 32, 22, 0.06); }
+      .person-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+      .person-header strong { display: block; font-size: 24px; color: var(--ink); }
+      .person-header span { font-size: 16px; font-weight: 600; color: var(--muted); }
+      .math-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 18px; color: var(--muted); border-bottom: 1px dashed var(--line); }
+      .math-row strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+      .margin-total-box { margin-top: 12px; padding: 12px 16px; border-radius: 14px; background: var(--bg-soft); display: flex; align-items: baseline; justify-content: space-between; }
+      .margin-total-box span { font-size: 17px; font-weight: 600; color: var(--muted); }
+      .margin-total-box strong { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 30px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
+
+      .split-compare-card { background: var(--canopy); color: var(--cream); border-radius: 22px; padding: 22px 26px; display: flex; flex-direction: column; gap: 14px; }
+      .split-compare-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 14px; background: rgba(255, 255, 255, 0.07); }
+      .split-compare-row--fair { background: #334e2c; border: 1px solid #6b9650; }
+      .split-compare-label { font-size: 19px; font-weight: 700; color: #ffffff; }
+      .split-compare-sub { font-size: 16px; color: var(--cream-muted); }
+      .split-compare-nums { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; font-variant-numeric: tabular-nums; }
+
+      .dual-screens { display: flex; flex-direction: column; gap: 18px; }
+      .mini-browser { background: var(--card); border: 1px solid var(--line-strong); border-radius: 20px; overflow: hidden; box-shadow: 0 16px 40px rgba(21, 32, 22, 0.1); }
+      .mini-viewport { width: 100%; height: 325px; overflow: hidden; }
+      .mini-viewport img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+      #s5-img-bottom { object-position: center 42%; }
+
+      .bill-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--line); }
+      .bill-item:last-child { border-bottom: none; }
+      .bill-meta strong { display: block; font-size: 20px; color: var(--ink); }
+      .bill-meta span { font-size: 16px; color: var(--muted); }
+      .bill-right { display: flex; align-items: center; gap: 14px; }
+      .bill-amount { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 24px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+      .status-pill { padding: 5px 14px; border-radius: 999px; font-size: 16px; font-weight: 700; }
+      .status-pill--paid { background: var(--green-tint); color: var(--green); }
+      .status-pill--planned { background: var(--bg-soft); color: var(--muted); }
+
+      .whatif-card { background: var(--amber-bg); border: 1px solid var(--amber-line); border-radius: 22px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px; }
+      .whatif-head { display: flex; align-items: center; justify-content: space-between; }
+      .whatif-head strong { font-size: 21px; color: var(--amber-ink); }
+      .whatif-delta { padding: 5px 14px; border-radius: 999px; background: #f8e2bd; color: var(--amber-ink); font-size: 17px; font-weight: 700; }
+      .whatif-body { display: flex; align-items: center; justify-content: space-between; font-size: 19px; font-weight: 600; color: var(--ink); }
+
+      .privacy-flow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .flow-box { padding: 18px 20px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+      .flow-box--local { background: var(--bg-soft); border-color: var(--line-strong); }
+      .flow-tag { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+      .flow-box strong { display: block; font-size: 20px; color: var(--ink); margin-bottom: 4px; }
+      .flow-box span { font-size: 17px; color: var(--muted); }
+      .coach-quote-card { background: var(--card); border: 1px solid var(--line-strong); border-radius: 22px; padding: 24px 28px; box-shadow: 0 14px 36px rgba(21, 32, 22, 0.08); }
+      .coach-quote-text { margin: 0 0 16px; padding-left: 18px; border-left: 4px solid var(--green-bright); font-family: "Space Grotesk", "Inter", sans-serif; font-size: 22px; line-height: 1.48; font-weight: 600; color: var(--ink); }
+      .coach-local-append { padding: 14px 18px; border-radius: 14px; background: var(--green-tint); border: 1px solid var(--line-strong); display: flex; align-items: center; justify-content: space-between; }
+      .coach-local-append strong { font-size: 18px; color: var(--ink); }
+      .coach-local-append span { font-size: 16px; font-weight: 700; color: var(--green); }
+
+      .vault-demo-card { background: var(--card); border: 1px solid var(--line-strong); border-radius: 24px; padding: 26px 30px; box-shadow: 0 18px 44px rgba(21, 32, 22, 0.1); display: flex; flex-direction: column; gap: 16px; }
+      .vault-head { display: flex; align-items: center; justify-content: space-between; }
+      .vault-head strong { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 28px; color: var(--ink); }
+      .vault-badge { padding: 6px 14px; border-radius: 999px; background: var(--green); color: #ffffff; font-size: 16px; font-weight: 700; }
+      .vault-input-mock { padding: 14px 18px; border-radius: 14px; background: var(--bg); border: 2px solid var(--green-bright); display: flex; align-items: center; justify-content: space-between; }
+      .vault-dots { font-size: 24px; letter-spacing: 0.18em; color: var(--ink); font-weight: 700; }
+      .vault-status { font-size: 17px; font-weight: 700; color: var(--green); }
+      .spec-list { display: flex; flex-direction: column; gap: 10px; }
+      .spec-item { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 14px; background: var(--bg-soft); font-size: 18px; font-weight: 600; color: var(--ink); }
+      .spec-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); flex: 0 0 10px; }
+
+      .outro-card {
+        position: relative; overflow: hidden; width: 1480px; padding: 64px 76px; border-radius: 36px;
+        background: var(--canopy); color: var(--cream); border: 1px solid #385233;
+        box-shadow: 0 28px 70px rgba(21, 32, 22, 0.2); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 24px;
+      }
+      .outro-fern {
+        position: absolute; right: -30px; bottom: -30px; width: 460px; height: 360px;
+        background: center / cover no-repeat url("./assets/fern.webp"); opacity: 0.22; mix-blend-mode: screen; pointer-events: none;
+      }
+      .outro-brand { display: flex; align-items: center; gap: 18px; }
+      .outro-brand-mark { width: 60px; height: 60px; border-radius: 16px; background: center / contain no-repeat url("./assets/favicon.svg"); }
+      .outro-brand span { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 52px; font-weight: 700; letter-spacing: -0.04em; color: #ffffff; }
+      .outro-title { margin: 0; max-width: 1080px; font-family: "Space Grotesk", "Inter", sans-serif; font-size: 72px; font-weight: 700; line-height: 1.04; letter-spacing: -0.045em; color: #ffffff; }
+      .outro-sub { margin: 0; max-width: 880px; font-size: 25px; line-height: 1.45; color: var(--cream-muted); }
+      .outro-avatars { display: flex; align-items: center; gap: 14px; margin: 4px 0; }
+      .outro-links { display: flex; align-items: center; gap: 24px; margin-top: 8px; }
+      .outro-cta-primary { padding: 18px 34px; border-radius: 999px; background: #5a853e; color: #ffffff; font-size: 24px; font-weight: 700; }
+      .outro-cta-secondary { padding: 18px 34px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(244, 250, 239, 0.3); color: #ffffff; font-size: 24px; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="margin-explainer" data-start="0" data-duration="67.44" data-width="1920" data-height="1080">
+      <audio id="soundtrack" data-start="0" data-duration="67.44" data-track-index="0" data-volume="1" src="./assets/soundtrack.mp3"></audio>
+      <div class="bg-decor" data-layout-ignore>
+        <div class="bg-dots"></div>
+        <div class="bg-orb bg-orb--one"></div>
+        <div class="bg-orb bg-orb--two"></div>
+      </div>
+
+      <header class="chrome-header">
+        <div class="brand-lockup">
+          <img class="brand-icon" src="./assets/favicon.svg" alt="Margin" />
+          <span class="brand-name">Margin</span>
+          <span class="brand-tag">Shared Home Planner</span>
+        </div>
+        <div class="header-right">
+          <span class="hackathon-pill">Bay Valley Hacks 2026 · Elevate the Ordinary</span>
+          <span class="url-pill">getmargin.pages.dev</span>
+        </div>
+      </header>
+
+      <!-- SCENE 1 -->
+      <section id="scene1" class="scene">
+        <div class="col-stack">
+          <div id="s1-kicker" class="kicker">01 · Overview · Roommates in Sync</div>
+          <h1 id="s1-title" class="scene-title">Your shared home, <span>finally in sync.</span></h1>
+          <p id="s1-lead" class="scene-lead">Splitting bills usually means awkward texts and rigid 50/50 math. Margin gives roommates a calm, privacy-first monthly plan that lives right on your device.</p>
+          <div id="s1-fern-card" class="fern-hero-card">
+            <div class="fern-art" data-layout-ignore></div>
+            <div class="fern-metric">
+              <span class="fern-metric-label">Shared monthly costs</span>
+              <strong class="fern-metric-value">$1,800</strong>
+              <span class="fern-metric-sub">3 recurring household bills</span>
+            </div>
+            <div class="fern-metric">
+              <span class="fern-metric-label">Room after the plan</span>
+              <strong class="fern-metric-value">$1,800</strong>
+              <span class="fern-metric-sub">$3,600 available after essentials</span>
+            </div>
+          </div>
+        </div>
+        <div id="s1-browser" class="browser-stage">
+          <div class="browser-window">
+            <div class="browser-bar">
+              <div class="browser-dots"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <span class="browser-address">https://getmargin.pages.dev — Overview</span>
+            </div>
+            <div class="browser-viewport" data-layout-allow-overflow>
+              <img id="s1-img" src="./assets/screen-overview.png" alt="Margin Overview Page" />
+            </div>
+          </div>
+          <div id="s1-callout" class="callout-banner">
+            <strong>Maya pays $600 · Leo pays $1,200</strong>
+            <span>Each contributes 50% of available funds</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 2 -->
+      <section id="scene2" class="scene">
+        <div class="col-stack">
+          <div id="s2-kicker" class="kicker">02 · Available-Margin Split Engine</div>
+          <h2 id="s2-title" class="scene-title">Share the effort, <span>not just the bill.</span></h2>
+          <p id="s2-lead" class="scene-lead">Flat 50/50 splits ignore different paychecks and personal essentials. Margin calculates what each person actually has left, then splits shared costs proportionally.</p>
+          <div id="s2-people" class="roommate-grid">
+            <div class="ui-card">
+              <div class="person-header"><span class="avatar-sprite avatar-maya"></span><div><strong>Maya</strong><span>Roommate 1</span></div></div>
+              <div class="math-row"><span>Monthly take-home</span><strong>$2,800</strong></div>
+              <div class="math-row"><span>Personal essentials</span><strong>− $1,600</strong></div>
+              <div class="margin-total-box"><span>Available margin</span><strong>$1,200</strong></div>
+            </div>
+            <div class="ui-card">
+              <div class="person-header"><span class="avatar-sprite avatar-leo"></span><div><strong>Leo</strong><span>Roommate 2</span></div></div>
+              <div class="math-row"><span>Monthly take-home</span><strong>$4,800</strong></div>
+              <div class="math-row"><span>Personal essentials</span><strong>− $2,400</strong></div>
+              <div class="margin-total-box"><span>Available margin</span><strong>$2,400</strong></div>
+            </div>
+          </div>
+          <div id="s2-compare" class="split-compare-card">
+            <div class="split-compare-row">
+              <div><div class="split-compare-label">Rigid 50/50 Equal Split</div><div class="split-compare-sub">Takes 75% of Maya's margin vs 37.5% of Leo's</div></div>
+              <div class="split-compare-nums">$900 / $900</div>
+            </div>
+            <div class="split-compare-row split-compare-row--fair">
+              <div><div class="split-compare-label">Margin Proportional Split</div><div class="split-compare-sub">Both contribute exactly 50% of available funds</div></div>
+              <div class="split-compare-nums">Maya $600 · Leo $1,200</div>
+            </div>
+          </div>
+        </div>
+        <div id="s2-browser" class="browser-stage">
+          <div class="browser-window">
+            <div class="browser-bar">
+              <div class="browser-dots"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <span class="browser-address">https://getmargin.pages.dev — Roommates (Up to 12)</span>
+            </div>
+            <div class="browser-viewport" data-layout-allow-overflow>
+              <img id="s2-img" src="./assets/screen-roommates.png" alt="Margin Roommates Page" />
+            </div>
+          </div>
+          <div class="callout-banner">
+            <strong>Deterministic BigInt Cent Arithmetic</strong>
+            <span>Largest-remainder tie-breaking · Zero rounding drift</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 3 -->
+      <section id="scene3" class="scene">
+        <div class="col-stack">
+          <div id="s3-kicker" class="kicker">03 · Recurring Plan & What-If Builder</div>
+          <h2 id="s3-title" class="scene-title">Track every due date. <span>Test any surprise.</span></h2>
+          <p id="s3-lead" class="scene-lead">Check off bills month by month, export clean spreadsheets to CSV, or preview a one-time $120 utility spike side by side without changing your saved plan.</p>
+          <div id="s3-bills" class="ui-card">
+            <div class="bill-item"><div class="bill-meta"><strong>Rent</strong><span>Due 1st · Housing</span></div><div class="bill-right"><span class="bill-amount">$1,200</span><span class="status-pill status-pill--paid">Paid ✓</span></div></div>
+            <div class="bill-item"><div class="bill-meta"><strong>Utilities</strong><span>Due 12th · Utilities</span></div><div class="bill-right"><span class="bill-amount">$350</span><span class="status-pill status-pill--planned">Planned</span></div></div>
+            <div class="bill-item"><div class="bill-meta"><strong>Groceries</strong><span>Due 18th · Food</span></div><div class="bill-right"><span class="bill-amount">$250</span><span class="status-pill status-pill--planned">Export CSV ↗</span></div></div>
+          </div>
+          <div id="s3-whatif" class="whatif-card">
+            <div class="whatif-head"><strong>What-If Preview: +$120 One-Time Expense</strong><span class="whatif-delta">$1,800 → $1,920</span></div>
+            <div class="whatif-body"><span>Maya: $600 → $640 (+$40)</span><span>Leo: $1,200 → $1,280 (+$80)</span></div>
+          </div>
+        </div>
+        <div id="s3-screens" class="dual-screens">
+          <div class="mini-browser">
+            <div class="browser-bar"><div class="browser-dots"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div><span class="browser-address">Monthly Plan — Recurring Costs & CSV Export</span></div>
+            <div class="mini-viewport" data-layout-allow-overflow><img id="s3-img-top" src="./assets/screen-plan.png" alt="Margin Monthly Plan Page" /></div>
+          </div>
+          <div class="mini-browser">
+            <div class="browser-bar"><div class="browser-dots"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div><span class="browser-address">Scenarios — Side-by-Side What-If Preview</span></div>
+            <div class="mini-viewport" data-layout-allow-overflow><img id="s3-img-bottom" src="./assets/screen-scenarios.png" alt="Margin Scenarios Page" /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 4 -->
+      <section id="scene4" class="scene">
+        <div class="col-stack">
+          <div id="s4-kicker" class="kicker">04 · Cloudflare Workers AI · Google Gemma 4</div>
+          <h2 id="s4-title" class="scene-title">Bring up money talks <span>without the tension.</span></h2>
+          <p id="s4-lead" class="scene-lead">Pick a conversation goal and tone. Cloudflare Workers AI drafts a kind opener using Google Gemma 4—while real names and numbers never leave your browser.</p>
+          <div id="s4-privacy" class="privacy-flow">
+            <div class="flow-box"><div class="flow-tag">Sent to Cloudflare AI</div><strong>Goal + Tone Only</strong><span>"start-talk" · "warm" (Zero PII)</span></div>
+            <div class="flow-box flow-box--local"><div class="flow-tag">Merged in Browser</div><strong>Real Names & Dollars</strong><span>Appended locally after reply</span></div>
+          </div>
+          <div id="s4-quote" class="coach-quote-card">
+            <p class="coach-quote-text">“Hey, I was wondering if we could find a little time soon to chat about how we’re handling the household expenses. I’d love to make sure we have a system that feels fair and easy for everyone to manage.”</p>
+            <div class="coach-local-append"><strong>Added on device: Maya $600 · Leo $1,200 (50% margin)</strong><span>Google Gemma 4</span></div>
+          </div>
+        </div>
+        <div id="s4-browser" class="browser-stage">
+          <div class="browser-window">
+            <div class="browser-bar"><div class="browser-dots"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div><span class="browser-address">https://getmargin.pages.dev — AI Conversation Coach</span></div>
+            <div class="browser-viewport" data-layout-allow-overflow><img id="s4-img" src="./assets/screen-coach.png" alt="Margin AI Coach Page" /></div>
+          </div>
+          <div class="callout-banner"><strong>Strict Zero-PII Worker Guardrails</strong><span>Rejects extra fields · Filters numeric hallucinations</span></div>
+        </div>
+      </section>
+
+      <!-- SCENE 5 -->
+      <section id="scene5" class="scene">
+        <div class="col-stack">
+          <div id="s5-kicker" class="kicker">05 · Local Web Crypto Password Vault</div>
+          <h2 id="s5-title" class="scene-title">Your space, protected. <span>Locked on reload.</span></h2>
+          <p id="s5-lead" class="scene-lead">Protect your household plan on shared computers. Margin encrypts your plan locally in the browser and requires your password whenever the page reloads.</p>
+          <div id="s5-vault" class="vault-demo-card">
+            <div class="vault-head"><strong>Welcome back.</strong><span class="vault-badge">AES-256-GCM Vault</span></div>
+            <div class="vault-input-mock"><span class="vault-dots">••••••••••••••••••••</span><span class="vault-status">Unlocked on device ✓</span></div>
+            <div class="spec-list">
+              <div class="spec-item"><span class="spec-dot"></span><span>PBKDF2-SHA-256 key derivation with 600,000 iterations</span></div>
+              <div class="spec-item"><span class="spec-dot"></span><span>Authenticated AES-256-GCM ciphertext with fresh 96-bit IV</span></div>
+              <div class="spec-item"><span class="spec-dot"></span><span>Automatic migration of existing plans · Zero server knowledge</span></div>
+            </div>
+          </div>
+        </div>
+        <div id="s5-screens" class="dual-screens">
+          <div class="mini-browser">
+            <div class="browser-bar"><div class="browser-dots"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div><span class="browser-address">Security — Enable Local Password Protection</span></div>
+            <div class="mini-viewport" data-layout-allow-overflow><img id="s5-img-top" src="./assets/screen-security.png" alt="Margin Security Page" /></div>
+          </div>
+          <div class="mini-browser">
+            <div class="browser-bar"><div class="browser-dots"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div><span class="browser-address">Lock Screen — Automatic Lock on Page Reload</span></div>
+            <div class="mini-viewport" data-layout-allow-overflow><img id="s5-img-bottom" src="./assets/screen-lock.png" alt="Margin Lock Screen" /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 6 -->
+      <section id="scene6" class="scene">
+        <div id="s6-card" class="outro-card">
+          <div class="outro-fern" data-layout-ignore></div>
+          <div id="s6-brand" class="outro-brand">
+            <div class="outro-brand-mark" role="img" aria-label="Margin"></div>
+            <span>Margin</span>
+          </div>
+          <h2 id="s6-title" class="outro-title">Elevate the ordinary kitchen-table budget.</h2>
+          <p id="s6-sub" class="outro-sub">Fair available-income splits, what-if scenarios, a zero-PII Cloudflare AI coach, and local AES-256-GCM encryption—built for the home you share.</p>
+          <div id="s6-avatars" class="outro-avatars">
+            <span class="avatar-sprite avatar-maya"></span>
+            <span class="avatar-sprite avatar-leo"></span>
+            <span class="avatar-sprite avatar-3"></span>
+            <span class="avatar-sprite avatar-4"></span>
+          </div>
+          <div id="s6-links" class="outro-links">
+            <div class="outro-cta-primary">Live App · getmargin.pages.dev</div>
+            <div class="outro-cta-secondary">GitHub · github.com/Manateek1/margin</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="chrome-footer">
+        <div class="chapter-pills">
+          <span id="chap-1" class="chapter-pill chapter-pill--active">01 Overview</span>
+          <span id="chap-2" class="chapter-pill">02 Fair Split</span>
+          <span id="chap-3" class="chapter-pill">03 Plan & What-If</span>
+          <span id="chap-4" class="chapter-pill">04 AI Coach</span>
+          <span id="chap-5" class="chapter-pill">05 Password Vault</span>
+          <span id="chap-6" class="chapter-pill">06 Try Margin</span>
+        </div>
+        <div class="footer-meta">React 19 · TypeScript · Cloudflare Workers AI · Web Crypto</div>
+      </footer>
+    </div>
+
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      function activateChapter(index, time) {
+        const ids = ["#chap-1", "#chap-2", "#chap-3", "#chap-4", "#chap-5", "#chap-6"];
+        ids.forEach((sel, idx) => {
+          if (idx + 1 === index) {
+            tl.to(sel, { backgroundColor: "#486b30", borderColor: "#486b30", color: "#ffffff", duration: 0.25 }, time);
+          } else {
+            tl.to(sel, { backgroundColor: "#edf3e8", borderColor: "#d8e4d2", color: "#3d4d3a", duration: 0.25 }, time);
+          }
+        });
+      }
+
+      tl.fromTo(".bg-orb--one", { x: 0, y: 0 }, { x: -60, y: 40, duration: 67.44, ease: "none" }, 0);
+      tl.fromTo(".bg-orb--two", { x: 0, y: 0 }, { x: 60, y: -40, duration: 67.44, ease: "none" }, 0);
+
+      // SCENE 1 (0.00s - 10.72s)
+      tl.fromTo("#s1-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.15);
+      tl.fromTo("#s1-title", { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: "expo.out" }, 0.3);
+      tl.fromTo("#s1-lead", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power2.out" }, 0.52);
+      tl.fromTo("#s1-fern-card", { y: 34, scale: 0.96, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.65, ease: "back.out(1.2)" }, 0.78);
+      tl.fromTo("#s1-browser", { x: 48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.45);
+      tl.fromTo("#s1-callout", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 1.15);
+      tl.fromTo("#s1-img", { scale: 1 }, { scale: 1.035, duration: 10.2, ease: "none" }, 0.45);
+
+      activateChapter(2, 10.72);
+      tl.to("#scene1", { x: -1920, duration: 0.55, ease: "power3.inOut" }, 10.45);
+      tl.fromTo("#scene2", { x: 1920, opacity: 1 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.inOut" }, 10.45);
+      tl.set("#scene1", { opacity: 0 }, 11.02);
+
+      // SCENE 2 (10.72s - 23.05s)
+      tl.fromTo("#s2-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 10.85);
+      tl.fromTo("#s2-title", { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 11.0);
+      tl.fromTo("#s2-lead", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 11.2);
+      tl.fromTo("#s2-people", { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "back.out(1.15)" }, 11.45);
+      tl.fromTo("#s2-compare", { y: 28, scale: 0.97, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.6, ease: "power3.out" }, 11.8);
+      tl.fromTo("#s2-browser", { x: 48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: "power3.out" }, 11.15);
+      tl.fromTo("#s2-img", { scale: 1 }, { scale: 1.035, duration: 11.8, ease: "none" }, 11.15);
+
+      activateChapter(3, 23.05);
+      tl.to("#scene2", { x: -1920, duration: 0.55, ease: "power3.inOut" }, 22.78);
+      tl.fromTo("#scene3", { x: 1920, opacity: 1 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.inOut" }, 22.78);
+      tl.set("#scene2", { opacity: 0 }, 23.35);
+
+      // SCENE 3 (23.05s - 35.19s)
+      tl.fromTo("#s3-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 23.18);
+      tl.fromTo("#s3-title", { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 23.32);
+      tl.fromTo("#s3-lead", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 23.52);
+      tl.fromTo("#s3-bills", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 23.75);
+      tl.fromTo("#s3-whatif", { y: 28, scale: 0.96, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.2)" }, 24.1);
+      tl.fromTo("#s3-screens", { x: 48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: "power3.out" }, 23.45);
+      tl.fromTo("#s3-img-top", { scale: 1 }, { scale: 1.035, duration: 11.5, ease: "none" }, 23.45);
+      tl.fromTo("#s3-img-bottom", { scale: 1 }, { scale: 1.035, duration: 11.5, ease: "none" }, 23.45);
+
+      activateChapter(4, 35.19);
+      tl.to("#scene3", { x: -1920, duration: 0.55, ease: "power3.inOut" }, 34.92);
+      tl.fromTo("#scene4", { x: 1920, opacity: 1 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.inOut" }, 34.92);
+      tl.set("#scene3", { opacity: 0 }, 35.49);
+
+      // SCENE 4 (35.19s - 48.89s)
+      tl.fromTo("#s4-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 35.32);
+      tl.fromTo("#s4-title", { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 35.48);
+      tl.fromTo("#s4-lead", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 35.68);
+      tl.fromTo("#s4-privacy", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 35.92);
+      tl.fromTo("#s4-quote", { y: 32, scale: 0.97, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.65, ease: "back.out(1.18)" }, 36.25);
+      tl.fromTo("#s4-browser", { x: 48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: "power3.out" }, 35.6);
+      tl.fromTo("#s4-img", { scale: 1 }, { scale: 1.035, duration: 13.0, ease: "none" }, 35.6);
+
+      activateChapter(5, 48.89);
+      tl.to("#scene4", { x: -1920, duration: 0.55, ease: "power3.inOut" }, 48.62);
+      tl.fromTo("#scene5", { x: 1920, opacity: 1 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.inOut" }, 48.62);
+      tl.set("#scene4", { opacity: 0 }, 49.19);
+
+      // SCENE 5 (48.89s - 59.45s)
+      tl.fromTo("#s5-kicker", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 49.02);
+      tl.fromTo("#s5-title", { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 49.18);
+      tl.fromTo("#s5-lead", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 49.38);
+      tl.fromTo("#s5-vault", { y: 32, scale: 0.97, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.65, ease: "back.out(1.2)" }, 49.65);
+      tl.fromTo("#s5-screens", { x: 48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.65, ease: "power3.out" }, 49.3);
+      tl.fromTo("#s5-img-top", { scale: 1 }, { scale: 1.035, duration: 9.9, ease: "none" }, 49.3);
+      tl.fromTo("#s5-img-bottom", { scale: 1 }, { scale: 1.035, duration: 9.9, ease: "none" }, 49.3);
+
+      activateChapter(6, 59.45);
+      tl.to("#scene5", { x: -1920, duration: 0.55, ease: "power3.inOut" }, 59.18);
+      tl.fromTo("#scene6", { x: 1920, opacity: 1 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.inOut" }, 59.18);
+      tl.set("#scene5", { opacity: 0 }, 59.75);
+
+      // SCENE 6 (59.45s - 67.44s)
+      tl.fromTo("#s6-card", { y: 40, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.7, ease: "expo.out" }, 59.55);
+      tl.fromTo("#s6-brand", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 59.75);
+      tl.fromTo("#s6-title", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 59.92);
+      tl.fromTo("#s6-sub", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 60.12);
+      tl.fromTo("#s6-avatars", { scale: 0.88, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.4)" }, 60.32);
+      tl.fromTo("#s6-links", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 60.52);
+
+      window.__timelines["margin-explainer"] = tl;
+    </script>
+  </body>
+</html>
